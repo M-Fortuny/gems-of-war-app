@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "nombre": "Rowanne",
+    "rareza": "Ultra-Rara",
+    "imagen_url": "https://gowdb.com/images/cards/6030.png"
+  },
+  {
+    "id": 2,
+    "nombre": "Dragón de Fuego",
+    "rareza": "Legendaria",
+    "imagen_url": "https://gowdb.com/images/cards/6001.png"
+  }
+]
