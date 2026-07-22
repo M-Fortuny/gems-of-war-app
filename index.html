@@ -231,11 +231,20 @@
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
-        .icono-colapso {
+            .icono-colapso {
+            
+            color: #FFFFFF !important;
             font-size: 1.2rem;
-            color: var(--h1-color);
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
             transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
         .acordeon-container {
             display: grid;
             grid-template-rows: 1fr;
@@ -253,10 +262,14 @@
             box-sizing: border-box;
             transition: opacity 0.3s ease-out;
         }
-        .acordeon-container.colapsado .acordeon-content {
+            .acordeon-container.colapsado .acordeon-content {
             opacity: 0;
             visibility: hidden;
+            padding-top: 0 !important; 
+            padding-bottom: 0 !important;
+            margin: 0 !important;
         }
+
         
         /* Estilos de la Nueva Matriz Simétrica Flexbox */
         .selector-matriz { display: flex; background: var(--tag-bg); padding: 4px; border-radius: 12px; width: 100%; box-sizing: border-box; }
@@ -459,10 +472,19 @@
         .btn-perfil:active { transform: scale(0.95); }
         .btn-herramienta:active { background-color: var(--border-color); }
 
-        @media (max-width: 768px) {
-            #contenedor-fijo-superior { padding-top: 5px; padding-bottom: 0px; }
-            header { margin-bottom: 5px; height: auto; }
+                @media (max-width: 768px) {
+            /* Simetría perfecta: mismo padding arriba y abajo, eliminando márgenes extra */
+            #contenedor-fijo-superior { 
+                padding-top: 15px; 
+                padding-bottom: 15px; 
+            }
+            header { 
+                margin-bottom: 0px; /* Anulamos el margen para que no empuje hacia abajo */
+                height: auto; 
+            }
             h1 { font-size: 2.2rem; }
+            
+
 
             .seccion-herramientas { padding: 0.6rem; margin-bottom: 1rem; }
             .btn-herramienta { padding: 0.5rem 0.2rem; }
@@ -480,11 +502,30 @@
             .btn-rapido.factor { order: 2; }
         }
 
+
         @media (orientation: landscape) and (max-device-width: 950px), (orientation: landscape) and (max-height: 550px) {
             body { padding: 0; height: 100vh; overflow: hidden; display: block; }
             header, #contenedor-fijo-superior, #tarjeta-glucosa, #contenedor-pendientes, .seccion-vertical, dialog, .seccion-herramientas { display: none !important; }
-            #contenedor-grafico { display: flex !important; position: fixed; top: 0; left: 0; width: 100vw !important; height: 100vh !important; margin: 0 !important; padding: 15px !important; box-sizing: border-box; background: var(--bg-body); z-index: 99999; border-radius: 0; }
+
+            
+            #contenedor-grafico { 
+                display: flex !important; 
+                position: fixed; 
+                top: 0; left: 0; 
+                width: 100vw !important; 
+                height: 100vh !important; 
+                margin: 0 !important; 
+                
+                /* AJUSTE CLAVE: 65px de padding top para que la curva no choque con los botones flotantes */
+                padding: 65px 15px 15px 15px !important; 
+                
+                box-sizing: border-box; 
+                background: var(--bg-body); 
+                z-index: 99999; 
+                border-radius: 0; 
+            }
         }
+
 
         @media print {
             body { background: white; color: black; padding: 0; }
@@ -2847,6 +2888,9 @@ window.toggleSeccion = function(containerId, iconId) {
             actualizarPendientes();
         }
 
+
+
+
         function renderizarGrafica(datos) {
     if (!datos || !Array.isArray(datos)) return;
 
@@ -2869,7 +2913,6 @@ window.toggleSeccion = function(containerId, iconId) {
 
     // 2. Extraer eventos de Insulina y Factores
     const datosInsulina = datos.filter(d => d.tipo === 'insulina' || d.dosis || d.insulina);
-    const datosFactores = datos.filter(d => d.tipo === 'factor' || d.factor || d.evento);
 
     // Mapear capas flotantes sobre las coordenadas de glucosa existentes
     const puntosInsulina = datosGlucosa.map(g => {
@@ -2878,23 +2921,21 @@ window.toggleSeccion = function(containerId, iconId) {
     });
 
     // Capa 3: Factores (SOLO si hay uno seleccionado en el desplegable)
-const puntosFactores = datosGlucosa.map(g => {
-    // Si no se ha elegido un factor concreto en el menú, no se dibuja nada
-    if (!factorHorizontalSeleccionado) return null;
+    const puntosFactores = datosGlucosa.map(g => {
+        if (!factorHorizontalSeleccionado) return null;
 
-    const coint = datos.find(f => {
-        if (f.fecha !== g.fecha || f.hora !== g.hora) return false;
+        const coint = datos.find(f => {
+            if (f.fecha !== g.fecha || f.hora !== g.hora) return false;
 
-        // Búsqueda flexible en las distintas propiedades donde guardas los nombres
-        const nombreEvento = f.evento || f.factor || f.detalles || f.nota || '';
-        const esArrayFactores = Array.isArray(f.factores) && f.factores.includes(factorHorizontalSeleccionado);
-        
-        return esArrayFactores || nombreEvento.toString().trim() === factorHorizontalSeleccionado;
+            // Búsqueda flexible en las distintas propiedades donde guardas los nombres
+            const nombreEvento = f.evento || f.factor || f.detalles || f.nota || '';
+            const esArrayFactores = Array.isArray(f.factores) && f.factores.includes(factorHorizontalSeleccionado);
+            
+            return esArrayFactores || nombreEvento.toString().trim() === factorHorizontalSeleccionado;
+        });
+
+        return coint ? g.valor : null;
     });
-
-    return coint ? g.valor : null;
-});
-
 
     const ctx = document.getElementById('miGrafica').getContext('2d');
     
@@ -2911,7 +2952,7 @@ const puntosFactores = datosGlucosa.map(g => {
             datasets: [
                 // Capa 1: Glucosa (Línea Verde)
                 {
-                    label: 'Glucosa (mg/dL)',
+                    label: 'Glucosa',
                     data: datosGlucosa.map(d => d.valor),
                     borderColor: '#28A745', 
                     backgroundColor: 'transparent', 
@@ -2936,7 +2977,7 @@ const puntosFactores = datosGlucosa.map(g => {
                 },
                 // Capa 3: Factores (Rombos Rojos Flotantes)
                 {
-                    label: 'Factores / Eventos',
+                    label: 'Factor / Evento',
                     data: puntosFactores,
                     borderColor: '#FF5252',
                     backgroundColor: '#FF5252',
@@ -2954,6 +2995,25 @@ const puntosFactores = datosGlucosa.map(g => {
             plugins: {
                 legend: {
                     display: false // Interfaz limpia sin ruido visual
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const datasetIndex = context.datasetIndex;
+                            const valor = context.raw;
+                            if (valor === null || valor === undefined) return '';
+
+                            if (datasetIndex === 0) {
+                                return ` 🩸 Glucosa: ${valor} mg/dL`;
+                            } else if (datasetIndex === 1) {
+                                return ` 💉 Insulina Aplicada`;
+                            } else if (datasetIndex === 2) {
+                                const nombre = factorHorizontalSeleccionado || 'Evento';
+                                return ` 📌 Factor: ${nombre}`;
+                            }
+                            return '';
+                        }
+                    }
                 }
             },
             scales: { 
@@ -2972,60 +3032,58 @@ const puntosFactores = datosGlucosa.map(g => {
 }
 
 
-        const mediaQueryLandscape = window.matchMedia('(orientation: landscape) and (max-device-width: 950px), (orientation: landscape) and (max-height: 550px)');
 
-        function manejarCambioOrientacion(e) {
-            const contenedor = document.getElementById('contenedor-grafico');
-            if (!contenedor) return;
-            
-            if (e.matches) {
-                contenedor.style.display = 'flex';
-                
-                const todosLosRegs = JSON.parse(localStorage.getItem(KEY_GLUCOSA) || '[]');
-                const regsFiltrados = filtrarRegistros(todosLosRegs, filtroTiempoActual, filtroTipoActual);
-                let datosParaGrafica = [...regsFiltrados];
+        // 🟢 CONTROLADOR DE ORIENTACIÓN PANORÁMICA Y TECLADO MÓVIL
+const mediaQueryLandscape = window.matchMedia('(orientation: landscape) and (max-device-width: 950px), (orientation: landscape) and (max-height: 550px)');
 
-                if (filtroTiempoActual === 'D') {
-                    const glucosasHoy = regsFiltrados.filter(r => r.valor && (!r.tipo || r.tipo === 'glucosa'));
-                    if (glucosasHoy.length <= 1) {
-                        const regsAyer = filtrarRegistros(todosLosRegs, 'D_AYER', filtroTipoActual); 
-                        datosParaGrafica = [...regsAyer, ...regsFiltrados];
-                    }
-                }
-                
-                if (datosParaGrafica.length > 0) {
-                    renderizarGrafica(datosParaGrafica);
-                } else {
-                    if (chartInstance) { 
-                        chartInstance.destroy();
-                        chartInstance = null;
-                    }
-                }
-            } else {
-                contenedor.style.display = 'none';
-                if (chartInstance) {
-                    chartInstance.destroy();
-                    chartInstance = null;
-                }
+function manejarCambioOrientacion(e) {
+    const contenedor = document.getElementById('contenedor-grafico');
+    if (!contenedor) return;
+    
+    if (e.matches) {
+        // 1. Mostrar contenedor panorámico
+        contenedor.style.display = 'flex';
+        
+        // 2. Refrescar gráfica usando el motor unificado (mantiene capas de insulina, factores y ciclo 24h)
+        if (typeof refrescarGraficaHorizontal === 'function') {
+            refrescarGraficaHorizontal();
+        } else {
+            // Fallback de seguridad si no se ha cargado la función
+            const keyStorage = typeof KEY_GLUCOSA !== 'undefined' ? KEY_GLUCOSA : 'misRegistros_v3';
+            const todosLosRegs = JSON.parse(localStorage.getItem(keyStorage) || '[]');
+            if (todosLosRegs.length > 0 && typeof renderizarGrafica === 'function') {
+                renderizarGrafica(todosLosRegs);
             }
         }
-
-        if (mediaQueryLandscape) {
-            mediaQueryLandscape.addEventListener('change', manejarCambioOrientacion);
+    } else {
+        // Ocultar contenedor y liberar memoria de Chart.js al volver a vertical
+        contenedor.style.display = 'none';
+        if (typeof chartInstance !== 'undefined' && chartInstance) {
+            chartInstance.destroy();
+            chartInstance = null;
         }
+    }
+}
 
+// Escuchador para cambios dinámicos de orientación
+if (mediaQueryLandscape) {
+    mediaQueryLandscape.addEventListener('change', manejarCambioOrientacion);
+}
 
-        if (mediaQueryLandscape && mediaQueryLandscape.matches) { 
-            setTimeout(() => manejarCambioOrientacion(mediaQueryLandscape), 300); 
-        }
+// Inicialización de seguridad al cargar la App si ya arranca en horizontal
+if (mediaQueryLandscape && mediaQueryLandscape.matches) { 
+    setTimeout(() => manejarCambioOrientacion(mediaQueryLandscape), 300); 
+}
 
-                document.addEventListener('focusin', function(e) {
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
-                setTimeout(function() {
-                    e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 300); 
-            }
-        });
+// Auto-scroll adaptativo para evitar que el teclado virtual oculte inputs/selects en móviles
+document.addEventListener('focusin', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
+        setTimeout(function() {
+            e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 300); 
+    }
+});
+
 
                 // --- LÓGICA DE BOTONES FLOTANTES (MODO HORIZONTAL) ---
 let insulinaHorizontalActiva = false;
