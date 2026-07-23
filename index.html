@@ -220,6 +220,29 @@
 
 
         /* ⬇️ ACORDEONES Y SECCIONES COLAPSABLES ⬇️ */
+
+
+	/* 🛡️ Parche Anti-Recuadro Naranja en Android / Chrome */
+			
+		.header-colapsable, 
+		.icono-colapso, 
+		button, 
+		.btn-rapido, 
+		.sub-acordeon,
+		.acordeon-container {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    outline: none !important;
+    user-select: none;
+}
+
+		.header-colapsable:focus, 
+			.icono-colapso:focus, 
+			button:focus {
+    		outline: none !important;
+    		box-shadow: none !important;
+}
+
         .header-colapsable {
             display: flex;
             justify-content: space-between;
@@ -473,9 +496,19 @@
         .btn-herramienta:active { background-color: var(--border-color); }
 
         @media (max-width: 768px) {
-            #contenedor-fijo-superior { padding-top: 5px; padding-bottom: 0px; }
-            header { margin-bottom: 5px; height: auto; }
-            h1 { font-size: 2.2rem; }
+    #contenedor-fijo-superior { 
+        padding-top: 2px; 
+        padding-bottom: 0px; 
+    }
+    header { 
+        margin-top: 2px;     /* Separación arriba (menor) */
+        margin-bottom: 12px; /* Separación abajo (mayor) */
+        height: auto; 
+    }
+    h1 { 
+        font-size: 2.2rem; 
+        margin: 0;
+    }
 
             .seccion-herramientas { padding: 0.6rem; margin-bottom: 1rem; }
             .btn-herramienta { padding: 0.5rem 0.2rem; }
