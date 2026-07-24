@@ -111,10 +111,23 @@
         }
 
         .img-icono-perfil {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
+    width: 80px !important;
+    height: 80px !important;
+    max-width: 80px !important;
+    max-height: 80px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    display: block !important;
+    margin: 0 auto !important;
+
+    /* 🎨 MARCO CIRCULAR VISIBLE */
+    border: 1px solid #1976D2 !important;
+    background-color: #2A2A2E !important;
+    box-sizing: border-box !important;
+}
+
+
+
         
         .bloque-ajustado { width: 90%; max-width: 400px; box-sizing: border-box; }
         
@@ -213,10 +226,6 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     border: 1px solid var(--border-color);
 }
-
-
-
-
 
 
         /* ⬇️ ACORDEONES Y SECCIONES COLAPSABLES ⬇️ */
@@ -757,6 +766,8 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
         }
 
+
+
         .panel-configuracion .switch input:checked + .slider { background-color: var(--accent-color); }
         .panel-configuracion .switch input:checked + .slider:before { transform: translateX(22px); }
 
@@ -779,6 +790,80 @@
                 align-self: stretch;
             }
         }
+
+
+
+/* ==========================================================================
+   📐 ALINEACIÓN EXACTA DE LA TARJETA (SIN TOCAR HTML NI JS)
+   ========================================================================== */
+
+/* 1. Fila superior: Nivelación vertical entre el perro y los datos */
+#tarjeta-glucosa > div:first-child {
+    display: flex !important;
+    align-items: center !important; /* Alinea las partes superiores en la misma horizontal */
+    justify-content: space-between !important;
+    margin-bottom: 15px !important;
+    width: 100% !important;
+}
+
+/* 2. Columna Izquierda (Mascota): Ancho alineado con el botón Glucosa */
+#tarjeta-glucosa > div:first-child > div:first-child {
+    flex: 0 0 30% !important; /* Mismo 30% que el botón inferior */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+/* 3. Columna Derecha (Métricas): Centrado horizontal y vertical perfecto */
+#tarjeta-glucosa > div:first-child > div:last-child {
+    flex: 1 !important; /* Ocupa el 70% restante */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;   /* Anula el 'flex-end' y CENTRA todo en el medio */
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+/* Centrado del texto "Última medición..." */
+#fecha-ultima-medicion {
+    text-align: center !important;
+    margin: 0 0 5px 0 !important;
+    width: 100% !important;
+}
+
+/* Centrado del número "300" junto a mg/dl e insulina */
+#tarjeta-glucosa > div:first-child > div:last-child > div {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important; /* Centra el bloque de la medición */
+    gap: 8px !important;
+    width: 100% !important;
+}
+
+/* 4. Proporciones exactas para los Botones Rápidos */
+.contenedor-botones-rapidos {
+    display: flex !important;
+    gap: 8px !important;
+    width: 100% !important;
+}
+
+/* El botón Glucosa toma el 30% para enmarcarse con el perro arriba */
+.contenedor-botones-rapidos .btn-rapido.glucosa {
+    flex: 0 0 30% !important;
+    box-sizing: border-box !important;
+}
+
+/* Insulina y Factores se reparten equitativamente el 70% restante */
+.contenedor-botones-rapidos .btn-rapido.insulina,
+.contenedor-botones-rapidos .btn-rapido.factor {
+    flex: 1 !important;
+    box-sizing: border-box !important;
+}
+
+
+
     </style>
 </head>
 <body>
@@ -788,30 +873,48 @@
             <h1><span id="btn-toggle-theme">Pawsitive Gluc</span></h1>
         </header>
 
-        <section id="tarjeta-glucosa" class="bloque-ajustado">
-            <button id="abrir-perfil" class="btn-perfil">
-                <img src="icono-app.png" alt="Perfil Mascota" class="img-icono-perfil">
-            </button>
-            <p style="margin:0; color: #666; font-size: 0.8rem;">Última medición</p>
-            <h2 id="valor-glucosa">---</h2>
-            
-            <div class="contenedor-botones-rapidos">
-                <button class="btn-rapido glucosa" onclick="abrirModalConTipo('glucosa')">
-                    <span style="font-size: 1.2em;">🩸</span>
-                    <span>Glucosa</span>
-                </button>
+            <section id="tarjeta-glucosa" class="bloque-ajustado">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
 
-                <button class="btn-rapido insulina" onclick="abrirModalConTipo('insulina')">
-                    <span style="font-size: 1.2em;">💉</span>
-                    <span>Insulina</span>
+            <div style="flex: 0 0 30%; display: flex; flex-direction: column; align-items: center;">
+                <button id="abrir-perfil" class="btn-perfil" style="position: static; margin-bottom: 5px;">
+                    <img src="icono-app.png" alt="Perfil Mascota" class="img-icono-perfil">
                 </button>
-
-                <button class="btn-rapido factor" onclick="abrirModalConTipo('factor')">
-                    <span style="font-size: 1.2em;">🍚</span>
-                    <span>Factores</span>
-                </button>
+                <span id="nombre-perfil-display" style="font-weight: bold; font-size: 0.9rem; color: var(--h1-color);">BONY</span>
             </div>
-        </section>
+
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end;">
+                <p id="fecha-ultima-medicion" style="margin: 0 0 5px 0; color: #B0B0B0; font-size: 0.75rem;">Última medición: --/--/--, --:--</p>
+
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <h2 id="valor-glucosa" style="margin: 0; color: #28A745 !important; font-size: 3.5rem; line-height: 1;">---</h2>
+
+                    <div style="display: flex; flex-direction: column; justify-content: center; text-align: left;">
+                        <span style="font-size: 0.9rem; color: var(--text-main); font-weight: 600;">mg/dl</span>
+                        <span id="info-insulina-previa" style="font-size: 0.75rem; color: #1976D2; line-height: 1.2; margin-top: 2px;">Insulina previa:<br>-- UI</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="contenedor-botones-rapidos">
+            <button class="btn-rapido glucosa" onclick="abrirModalConTipo('glucosa')">
+                <span style="font-size: 1.2em;">🩸</span>
+                <span>Glucosa</span>
+            </button>
+
+            <button class="btn-rapido insulina" onclick="abrirModalConTipo('insulina')">
+                <span style="font-size: 1.2em;">💉</span>
+                <span>Insulina</span>
+            </button>
+
+            <button class="btn-rapido factor" onclick="abrirModalConTipo('factor')">
+                <span style="font-size: 1.2em;">🍚</span>
+                <span>Factores</span>
+            </button>
+        </div>
+    </section>
+
 
         <div id="contenedor-pendientes" class="bloque-ajustado" style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px;"></div>
     </div>
@@ -1431,7 +1534,11 @@
         <button type="button" class="btn-form" style="background-color: #999; margin-top: 20px;" onclick="cerrarSubModal('modal-avanzada')">Cerrar</button>
     </dialog>
 
+
+
     <script>
+
+
         const KEY_GLUCOSA = 'misRegistros_v3';        
         const KEY_PERFIL = 'misDatos_perfil';
         const KEY_THEME = 'theme_pref'; 
@@ -1480,7 +1587,42 @@
         }                    
 
 
-        
+
+
+function actualizarDatosCabecera() {
+        const regs = JSON.parse(localStorage.getItem(KEY_GLUCOSA) || '[]');
+        const perfil = JSON.parse(localStorage.getItem(KEY_PERFIL) || '{}');
+
+        const valorGlucosa = document.getElementById('valor-glucosa');
+        const fechaUltima = document.getElementById('fecha-ultima-medicion');
+        const nombrePerfil = document.getElementById('nombre-perfil-display');
+        const infoInsulina = document.getElementById('info-insulina-previa');
+
+        if (nombrePerfil) nombrePerfil.textContent = perfil.nombre || 'BONY';
+
+        const ultimoRegistroGlucosa = regs.find(r => r && r.valor && (!r.tipo || r.tipo === 'glucosa'));
+        if (valorGlucosa) valorGlucosa.textContent = ultimoRegistroGlucosa ? ultimoRegistroGlucosa.valor : '---';
+
+        if (fechaUltima) {
+            if (ultimoRegistroGlucosa && ultimoRegistroGlucosa.fecha && ultimoRegistroGlucosa.hora) {
+                const [a, m, d] = ultimoRegistroGlucosa.fecha.split('-');
+                fechaUltima.textContent = `Última medición: ${d}/${m}/${a.slice(2)}, ${ultimoRegistroGlucosa.hora}`;
+            } else {
+                fechaUltima.textContent = 'Última medición: --/--/--, --:--';
+            }
+        }
+
+        if (infoInsulina) {
+            const ultimaInsulina = regs.find(r => r && r.tipo === 'insulina');
+            infoInsulina.innerHTML = ultimaInsulina ? `Insulina previa:<br>${ultimaInsulina.dosis || '--'} UI` : 'Insulina previa:<br>-- UI';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        actualizarDatosCabecera();
+    });
+
+   
 
 function restaurarEstadoAcordeones() {
     const secciones = [
@@ -1493,9 +1635,6 @@ function restaurarEstadoAcordeones() {
         'acordeon-factores', 
         'acordeon-medicacion'
     ];
-
-
-
 
     
     secciones.forEach(id => {
@@ -2634,8 +2773,6 @@ window.toggleSeccion = function(containerId, iconId) {
 }
 
 
-
-
         function calcularDiagnosticoIA(regs, perfil) {
             const regsGlucosa = regs.filter(r => r.valor && (!r.tipo || r.tipo === 'glucosa')).map(r => ({...r, v: parseFloat(r.valor), dt: new Date(`${r.fecha}T${r.hora}`)}));
             const regsInsulina = regs.filter(r => r.tipo === 'insulina').map(r => ({...r, dt: new Date(`${r.fecha}T${r.hora}`)}));
@@ -3053,8 +3190,6 @@ function renderizarGrafica(datos) {
 }
 
 
-
-
         const mediaQueryLandscape = window.matchMedia('(orientation: landscape) and (max-device-width: 950px), (orientation: landscape) and (max-height: 550px)');
 
         function manejarCambioOrientacion(e) {
@@ -3300,8 +3435,6 @@ function refrescarGraficaHorizontal() {
 }
 
 
-
-
         document.addEventListener('DOMContentLoaded', () => {
             const API_KEY = 'ef660e654281f681e0c643a10c9407ab';
             const CACHE_KEY = 'pawsitive_cached_clima';
@@ -3416,8 +3549,6 @@ function refrescarGraficaHorizontal() {
                 }
                 return false;
             };
-
-
 
 
                          /* ==========================================================================
